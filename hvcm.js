@@ -19,9 +19,13 @@ function getVideos(onVideosReceived) {
 
     db.serialize(function() {
         db.each(
-          "SELECT name, path FROM videos",
+          "SELECT path, created_at, added_at, last_opened_at FROM videos",
           function(err, row) {
-              result.push({name: row.name, path: row.path});
+              if (err) {
+                  console.log('Error: ' + err);
+              } else {
+                  result.push({name: row.path, path: row.path});
+              }
           },
           function() {
               onVideosReceived(result);
