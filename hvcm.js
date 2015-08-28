@@ -2,6 +2,7 @@ var video = require('./video.js');
 var videosDb = require('./videos_db.js');
 
 window.onload = function() {
+    drawVideos();
 };
 
 function drawVideos() {
