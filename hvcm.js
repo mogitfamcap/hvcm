@@ -22,6 +22,7 @@ function drawVideos() {
             result += "</tr>"
         });
         $('#videos-table-body').html(result);
+        $("#videos-table").tablesorter();
     });
 }
 
