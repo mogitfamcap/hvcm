@@ -1,3 +1,5 @@
+var video = require('./video.js');
+
 window.onload = function() {
 };
 
@@ -24,14 +26,15 @@ function getVideos(onVideosReceived) {
               if (err) {
                   console.log('Error: ' + err);
               } else {
-                  result.push({name: row.path, path: row.path});
+                  v = row;
+                  result.push({name: video.name(v.path), path: v.path});
               }
           },
           function() {
               onVideosReceived(result);
           }
       );
-  });
+    });
 
     db.close();
 }
