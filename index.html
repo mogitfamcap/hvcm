@@ -16,21 +16,34 @@
     <link rel="stylesheet" type="text/css" href="./hvcm.css">
   </head>
   <body>
-    <table id="videos-table" class="tablesorter">
-      <thead>
-        <tr>
-            <th></th>
-            <th>Name</th>
-            <th>Tags</th>
-            <th>Cast</th>
-            <th>Last Opened</th>
-            <th>Created</th>
-            <th>Added</th>
-        <tr>
-      </thead>
-      <tbody id="videos-table-body">
-      </tbody>
-    </table>
-    <input type="button" onclick="drawVideos()" value="Submit"/>
+    <div id="table-view">
+        <table id="videos-table" class="tablesorter">
+          <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Tags</th>
+                <th>Cast</th>
+                <th>Last Opened</th>
+                <th>Created</th>
+                <th>Added</th>
+            <tr>
+          </thead>
+          <tbody id="videos-table-body">
+          </tbody>
+        </table>
+        <input type="button" onclick="drawVideos()" value="Submit"/>
+    </div>
+    <div id="video-view" style="display: none;">
+        <input type="button" id="button-play" value="Play"></input>
+        <dl>
+            <dt>Name</dt><dd id="video-name"></dd>
+            <dt>Tags</dt><dd id="video-tags"></dd>
+            <dt>Cast</dt><dd id="video-cast"></dd>
+            <dt>Last Opened at</dt><dd id="video-last-opened-at"></dd>
+            <dt>Created at</dt><dd id="video-created-at"></dd>
+            <dt>Added at</dt><dd id="video-added-at"></dd>
+        </dl>
+    </div>
   </body>
 </html>

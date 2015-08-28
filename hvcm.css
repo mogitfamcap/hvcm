@@ -5,3 +5,16 @@ table, th, td {
 th, td {
     padding: 5px;
 }
+
+dt, dd {
+     float: left;
+ }
+
+dt {
+    clear:both;
+    margin-left: 10px;
+}
+
+dd {
+    margin-left: 10px;
+}

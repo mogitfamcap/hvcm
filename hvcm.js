@@ -10,10 +10,11 @@ function drawVideos() {
     videosDb.getAll(function(videos) {
         videos.forEach(function(v) {
             var name = video.name(v.path);
-            var play = '<a href="#" onclick="onVideoClicked(' + v.id + ');">' + 'Play' + '</a>';
+            var play = '<a href="#" onclick="playVideo(' + v.id + ');">' + 'Play' + '</a>';
+            var details = '<a href="#" onclick="videoDetails(' + v.id + ');">' + name + '</a>';
             result += "<tr>"
             result += "<td>" + play + "</td>";
-            result += "<td>" + name + "</td>";
+            result += "<td>" + details + "</td>";
             result += "<td>" + '' + "</td>"; // Tags
             result += "<td>" + '' + "</td>"; // Cast
             result += "<td>" + formatTimestamp(v.last_opened_at) + "</td>";
@@ -26,14 +27,30 @@ function drawVideos() {
     });
 }
 
-function onVideoClicked(id) {
-    console.log('Clicked video: ' + id);
+function playVideo(id) {
     videosDb.getVideo(id, function(v) {
         var exec = require('child_process').exec;
         var cmd = 'vlc "' + v.path + '"';
         console.log("Command: " + cmd);
         exec(cmd, function(error, stdout, stderr) {
         });
+    });
+}
+
+function videoDetails(id) {
+    videosDb.getVideo(id, function(v) {
+        $('#video-name').html(video.name(v.path));
+        $('#video-tags').html('');
+        $('#video-cast').html('');
+        $('#video-last-opened-at').html(formatTimestamp(v.last_opened_at));
+        $('#video-created-at').html(formatTimestamp(v.created_at));
+        $('#video-added-at').html(formatTimestamp(v.added_at));
+        $('#button-play').attr('onclick', '').click(function() {
+            playVideo(id);
+        });
+
+        $('#table-view').hide();
+        $('#video-view').show();
     });
 }
 
