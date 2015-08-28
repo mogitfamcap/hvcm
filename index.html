@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>hvcm</title>
+    <script src="./hvcm.js"></script>
+    <script src="./vendor/jquery-2.1.4.min.js"></script>
+    <script>
+    try {
+        $ = jQuery = module.exports;
+    } catch(e) {}
+    </script>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+            <th>Name</th>
+            <th>Path</th>
+        <tr>
+      </thead>
+      <tbody id="videos-table-body">
+      </tbody>
+    </table>
+    <input type="button" onclick="drawVideos()" value="Submit"/>
+  </body>
+</html>
