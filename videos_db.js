@@ -20,6 +20,7 @@ module.exports = {
               }
             );
         });
+        db.close();
     },
 
     getVideo: function(id, callback) {
@@ -36,5 +37,16 @@ module.exports = {
               }
             );
         });
+        db.close();
+    },
+
+    updateLastOpenedAt: function(id) {
+        var db = new sqlite3.Database('hvcm.sqlite');
+
+        db.serialize(function() {
+          db.run("UPDATE videos SET last_opened_at = " + Math.floor(Date.now() / 1000) + " WHERE id = " + id);
+        });
+
+        db.close();
     }
 };
