@@ -41,49 +41,11 @@ module.exports = {
     },
 
     getVideoTags: function(id, callback) {
-        var db = new sqlite3.Database('hvcm.sqlite');
-        var result = [];
-        db.serialize(function() {
-            db.each(
-              "SELECT id, name FROM tags WHERE video_id = " + id,
-              function(err, row) {
-                  if (err) {
-                      console.log('Error: ' + err);
-                  } else {
-                      result.push({id: row.id, name: row.name});
-                  }
-              },
-              function() {
-                  callback(result);
-              }
-            );
-        });
+        getVideoAttributes(id, 'tags', callback);
     },
 
     saveVideoTags: function(id, newTags) {
-        var db = new sqlite3.Database('hvcm.sqlite');
-        module.exports.getVideoTags(id, function(oldTagRows) {
-            var oldTags = [];
-            oldTagRows.forEach(function(row) {
-                oldTags.push(row.name);
-            });
-            newTags.forEach(function(newTag) {
-                var insertStatement = db.prepare("INSERT INTO tags(video_id, name, added_at) VALUES(?, ?, ?)");
-                if (oldTags.indexOf(newTag) === -1) {
-                    db.serialize(function() {
-                        insertStatement.run(id, newTag, Math.floor(Date.now() / 1000));
-                    });
-                }
-            });
-            oldTags.forEach(function(oldTag) {
-                var deleteStatement = db.prepare("DELETE FROM tags WHERE video_id = ? AND name = ?");
-                if (newTags.indexOf(oldTag) === -1) {
-                    db.serialize(function() {
-                        deleteStatement.run(id, oldTag);
-                    });
-                }
-            });
-        });
+        saveVideoAttributes(id, 'tags', newTags);
     },
 
     updateLastOpenedAt: function(id) {
@@ -96,3 +58,49 @@ module.exports = {
         db.close();
     }
 };
+
+function getVideoAttributes(videoId, attributeTableName, callback) {
+    var db = new sqlite3.Database('hvcm.sqlite');
+    var result = [];
+    db.serialize(function() {
+        db.each(
+          "SELECT id, name FROM " + attributeTableName + " WHERE video_id = " + videoId,
+          function(err, row) {
+              if (err) {
+                  console.log('Error: ' + err);
+              } else {
+                  result.push({id: row.id, name: row.name});
+              }
+          },
+          function() {
+              callback(result);
+          }
+        );
+    });
+}
+
+function saveVideoAttributes(videoId, attributeTableName, newAttributes) {
+    var db = new sqlite3.Database('hvcm.sqlite');
+    getVideoAttributes(videoId, attributeTableName, function(oldAttributeRows) {
+        var oldAttributes = [];
+        oldAttributeRows.forEach(function(row) {
+            oldAttributes.push(row.name);
+        });
+        newAttributes.forEach(function(newAttribute) {
+            var insertStatement = db.prepare("INSERT INTO " + attributeTableName + "(video_id, name, added_at) VALUES(?, ?, ?)");
+            if (oldAttributes.indexOf(newAttribute) === -1) {
+                db.serialize(function() {
+                    insertStatement.run(videoId, newAttribute, Math.floor(Date.now() / 1000));
+                });
+            }
+        });
+        oldAttributes.forEach(function(oldAttribute) {
+            var deleteStatement = db.prepare("DELETE FROM " + attributeTableName + " WHERE video_id = ? AND name = ?");
+            if (newAttributes.indexOf(oldAttribute) === -1) {
+                db.serialize(function() {
+                    deleteStatement.run(videoId, oldAttribute);
+                });
+            }
+        });
+    });
+}
