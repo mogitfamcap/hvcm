@@ -6,6 +6,9 @@ window.onload = function() {
 };
 
 function drawVideos() {
+    $('#table-view').show();
+    $('#video-view').hide();
+
     var result = "";
     videosDb.getAll(function(videos) {
         videos.forEach(function(v) {
