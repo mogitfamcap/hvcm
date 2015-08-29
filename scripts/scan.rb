@@ -2,7 +2,7 @@
 
 require 'sqlite3'
 
-SUPPORTED_EXTNAMES = ['.avi', '.mp4', '.wmv', '.mkv', '.flv']
+SUPPORTED_EXTNAMES = ['.avi', '.mp4', '.wmv', '.mkv', '.flv', '.mov', '.mpeg', '.mpg']
 
 unless ARGV.size == 1
   puts "Usage: scan.rb PATH"
