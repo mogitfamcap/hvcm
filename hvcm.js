@@ -54,10 +54,24 @@ function videoDetails(id) {
             playVideo(id);
         });
 
+        $('#button-save').unbind('click');
+        $('#button-save').attr('onclick', '').click(function() {
+            saveVideo(id);
+        });
+
         populateVideoTags(id, $('#video-tags-input'));
         $('#table-view').hide();
         $('#video-view').show();
     });
+}
+
+function saveVideo(id) {
+    saveTags(id);
+}
+
+function saveTags(id) {
+    var tags = $('#video-tags-input').tagsinput('items');
+    videosDb.saveVideoTags(id, tags);
 }
 
 function populateVideoTags(id, element) {

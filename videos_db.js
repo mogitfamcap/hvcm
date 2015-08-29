@@ -58,7 +58,32 @@ module.exports = {
               }
             );
         });
-        db.close();
+    },
+
+    saveVideoTags: function(id, newTags) {
+        var db = new sqlite3.Database('hvcm.sqlite');
+        module.exports.getVideoTags(id, function(oldTagRows) {
+            var oldTags = [];
+            oldTagRows.forEach(function(row) {
+                oldTags.push(row.name);
+            });
+            newTags.forEach(function(newTag) {
+                var insertStatement = db.prepare("INSERT INTO tags(video_id, name, added_at) VALUES(?, ?, ?)");
+                if (oldTags.indexOf(newTag) === -1) {
+                    db.serialize(function() {
+                        insertStatement.run(id, newTag, Math.floor(Date.now() / 1000));
+                    });
+                }
+            });
+            oldTags.forEach(function(oldTag) {
+                var deleteStatement = db.prepare("DELETE FROM tags WHERE video_id = ? AND name = ?");
+                if (newTags.indexOf(oldTag) === -1) {
+                    db.serialize(function() {
+                        deleteStatement.run(id, oldTag);
+                    });
+                }
+            });
+        });
     },
 
     updateLastOpenedAt: function(id) {
