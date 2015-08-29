@@ -10,10 +10,13 @@
     } catch(e) {}
     </script>
     <script src="./vendor/jquery.tablesorter.min.js"></script>
+    <script src="./vendor/bootstrap.min.js"></script>
+    <script src="./vendor/bootstrap-tagsinput.min.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="./vendor/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="./vendor/bootstrap-theme.min.css">
-    <link rel="stylesheet" type="text/css" href="./hvcm.css">
+    <link rel="stylesheet" type="text/css" href="./vendor/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="./vendor/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="./vendor/bootstrap-tagsinput.css"/>
+    <link rel="stylesheet" type="text/css" href="./hvcm.css"/>
   </head>
   <body>
     <div id="table-view">
@@ -41,7 +44,9 @@
         </div>
         <dl>
             <dt>Name</dt><dd id="video-name"></dd>
-            <dt>Tags</dt><dd id="video-tags"></dd>
+            <dt>Tags</dt><dd id="video-tags">
+                <input type="text" id="video-tags-input" value="" data-role="tagsinput" />
+            </dd>
             <dt>Cast</dt><dd id="video-cast"></dd>
             <dt>Last Opened at</dt><dd id="video-last-opened-at"></dd>
             <dt>Created at</dt><dd id="video-created-at"></dd>

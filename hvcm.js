@@ -44,18 +44,28 @@ function playVideo(id) {
 function videoDetails(id) {
     videosDb.getVideo(id, function(v) {
         $('#video-name').html(video.name(v.path));
-        $('#video-tags').html('');
         $('#video-cast').html('');
         $('#video-last-opened-at').html(formatTimestamp(v.last_opened_at));
         $('#video-created-at').html(formatTimestamp(v.created_at));
         $('#video-added-at').html(formatTimestamp(v.added_at));
+
         $('#button-play').unbind('click');
         $('#button-play').attr('onclick', '').click(function() {
             playVideo(id);
         });
 
+        populateVideoTags(id, $('#video-tags-input'));
         $('#table-view').hide();
         $('#video-view').show();
+    });
+}
+
+function populateVideoTags(id, element) {
+    element.tagsinput('removeAll');
+    videosDb.getVideoTags(id, function(tags) {
+        tags.forEach(function(tag) {
+            element.tagsinput('add', tag.name);
+        });
     });
 }
 

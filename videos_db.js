@@ -40,6 +40,27 @@ module.exports = {
         db.close();
     },
 
+    getVideoTags: function(id, callback) {
+        var db = new sqlite3.Database('hvcm.sqlite');
+        var result = [];
+        db.serialize(function() {
+            db.each(
+              "SELECT id, name FROM tags WHERE video_id = " + id,
+              function(err, row) {
+                  if (err) {
+                      console.log('Error: ' + err);
+                  } else {
+                      result.push({id: row.id, name: row.name});
+                  }
+              },
+              function() {
+                  callback(result);
+              }
+            );
+        });
+        db.close();
+    },
+
     updateLastOpenedAt: function(id) {
         var db = new sqlite3.Database('hvcm.sqlite');
 
