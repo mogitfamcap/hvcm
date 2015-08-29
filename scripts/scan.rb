@@ -2,13 +2,21 @@
 
 require 'sqlite3'
 
+SUPPORTED_EXTNAMES = ['.avi', '.mp4', '.wmv', '.mkv', '.flv']
+
 unless ARGV.size == 1
   puts "Usage: scan.rb PATH"
   exit 1
 end
 
 def add_file(path, db)
-  puts "Adding file: #{path}"
+  puts "Processing file: #{path}"
+  extname = File.extname(path)
+  unless SUPPORTED_EXTNAMES.include?(extname)
+    puts "Skipping. Invalid extension: #{extname}"
+    return
+  end
+
   created_at = File.ctime(path).to_i
   added_at = Time.now.to_i
 
@@ -18,7 +26,7 @@ end
 
 def scan(directory, db)
 puts "Scaning directory #{directory}"
-  Dir.glob("#{directory}/**/*").each do |file_path|
+  Dir.glob("#{directory}/**/*".sub('//', '/')).each do |file_path|
     add_file(file_path, db)
   end
 end
@@ -38,6 +46,6 @@ def create_db
   db
 end
 
-directory = ARGV[0]
+directory = ARGV[0].sub('//', '/')
 db = create_db
 scan(directory, db)
