@@ -106,7 +106,7 @@ function formatTimestamp(timestamp) {
     min = (min < 10 ? "0" : "") + min;
     sec = (sec < 10 ? "0" : "") + sec;
 
-    var str = date.getFullYear() + "-" + month + "-" + day + "_" +  hour + ":" + min + ":" + sec;
+    var str = date.getFullYear() + "/" + month + "/" + day + " " +  hour + ":" + min + ":" + sec;
 
     return str;
 }
