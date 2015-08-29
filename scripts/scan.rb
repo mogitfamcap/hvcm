@@ -13,15 +13,19 @@ def add_file(path, db)
   puts "Processing file: #{path}"
   extname = File.extname(path)
   unless SUPPORTED_EXTNAMES.include?(extname)
-    puts "Skipping. Invalid extension: #{extname}"
+    puts "Skipping: invalid extension: #{extname}"
     return
   end
 
   created_at = File.ctime(path).to_i
   added_at = Time.now.to_i
 
-  db.execute('INSERT INTO videos (path, created_at, added_at, last_opened_at)
-              VALUES (?, ?, ?, ?)', [path, created_at, added_at, nil])
+  if db.execute('SELECT * FROM videos WHERE path = ?', path).any?
+    puts 'Skipping: already exists'
+  else
+    db.execute('INSERT INTO videos (path, created_at, added_at, last_opened_at)
+                VALUES (?, ?, ?, ?)', [path, created_at, added_at, nil])
+  end
 end
 
 def scan(directory, db)
