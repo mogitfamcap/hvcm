@@ -21,8 +21,8 @@
   <body>
     <div id="table-view">
         <span id="search">
-            <input type="text" id="search-input" value="" data-role="tagsinput" />
-            <input type="button" id="button-search" value="Search"></input>
+            <input type="text" id="search-input" value="" data-role="tagsinput"/>
+            <input type="button" id="button-search" value="Search" onclick="search()"></input>
         </span>
 
         <table id="videos-table" class="tablesorter">
@@ -45,7 +45,7 @@
     <div id="video-view" style="display: none;">
         <div id="video-buttons">
             <input type="button" id="button-play" value="Play"></input>
-            <input type="button" id="home" value="Home" onclick="drawVideos()"></input>
+            <input type="button" id="home" value="Home" onclick="search()"></input>
             <input type="button" id="button-save" value="Save"></input>
         </div>
         <dl>

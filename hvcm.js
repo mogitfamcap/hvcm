@@ -2,15 +2,22 @@ var video = require('./video.js');
 var videosDb = require('./videos_db.js');
 
 window.onload = function() {
-    drawVideos();
+    search();
 };
 
-function drawVideos() {
+function search() {
+    var searchConditions = $('#search-input').tagsinput('items');
+    videosDb.getAllVideoIds(function(videoIds) {
+        drawVideos(videoIds);
+    });
+}
+
+function drawVideos(ids) {
     $('#table-view').show();
     $('#video-view').hide();
 
     var result = "";
-    videosDb.getAll(function(videos) {
+    videosDb.getByIds(ids, function(videos) {
         videos.forEach(function(v) {
             var name = video.name(v.path);
             var play = '<a href="#" onclick="playVideo(' + v.id + ');">' + 'Play' + '</a>';

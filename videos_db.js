@@ -23,6 +23,39 @@ module.exports = {
         db.close();
     },
 
+    getByIds: function(ids, callback) {
+        var db = new sqlite3.Database('hvcm.sqlite');
+        var result = [];
+
+        db.serialize(function() {
+            var statement = "SELECT id, path, created_at, added_at, last_opened_at FROM videos WHERE id IN (" + ids + ")";
+            db.each(
+              statement,
+              function(err, row) {
+                  if (err) {
+                      console.log('Error: ' + err);
+                  } else {
+                      result.push(row);
+                  }
+              },
+              function() {
+                  callback(result);
+              }
+            );
+        });
+        db.close();
+    },
+
+    getAllVideoIds: function(callback) {
+        module.exports.getAll(function(videos) {
+            var result = [];
+            videos.forEach(function(v) {
+                result.push(v.id);
+            });
+            callback(result);
+        });
+    },
+
     getVideo: function(id, callback) {
         var db = new sqlite3.Database('hvcm.sqlite');
         db.serialize(function() {
