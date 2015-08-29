@@ -55,6 +55,14 @@ def create_db
       added_at INTEGER
     );
   SQL
+  db.execute <<-SQL
+    CREATE TABLE IF NOT EXISTS cast (
+      id INTEGER PRIMARY KEY,
+      video_id INTEGER,
+      name varchar(200),
+      added_at INTEGER
+    );
+  SQL
   db
 end
 
