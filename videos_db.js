@@ -27,7 +27,7 @@ module.exports = {
         var db = new sqlite3.Database('hvcm.sqlite');
         db.serialize(function() {
             db.each(
-              "SELECT id, path, created_at, added_at, last_opened_at FROM videos WHERE id = " + id,
+              "SELECT id, path, notes, created_at, added_at, last_opened_at FROM videos WHERE id = " + id,
               function(err, row) {
                   if (err) {
                       console.log('Error: ' + err);
@@ -56,14 +56,20 @@ module.exports = {
         saveVideoAttributes(id, 'cast', newCast);
     },
 
+    saveVideoNotes: function(id, notes) {
+        var db = new sqlite3.Database('hvcm.sqlite');
+        db.serialize(function() {
+          db.run("UPDATE videos SET notes = '" + notes + "' WHERE id = " + id);
+        });
+        db.close();
+    },
+
     updateLastOpenedAt: function(id) {
         var db = new sqlite3.Database('hvcm.sqlite');
 
         db.serialize(function() {
           db.run("UPDATE videos SET last_opened_at = " + Math.floor(Date.now() / 1000) + " WHERE id = " + id);
         });
-
-        db.close();
     }
 };
 

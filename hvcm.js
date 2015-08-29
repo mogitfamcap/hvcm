@@ -49,6 +49,7 @@ function playVideo(id) {
 function videoDetails(id) {
     videosDb.getVideo(id, function(v) {
         $('#video-name').html(video.name(v.path));
+        $('#video-notes-textarea').val(v.notes);
         $('#video-last-opened-at').html(formatTimestamp(v.last_opened_at));
         $('#video-created-at').html(formatTimestamp(v.created_at));
         $('#video-added-at').html(formatTimestamp(v.added_at));
@@ -72,8 +73,14 @@ function videoDetails(id) {
 }
 
 function saveVideo(id) {
+    saveNotes(id);
     saveTags(id);
     saveCast(id);
+}
+
+function saveNotes(id) {
+    var notes = $('#video-notes-textarea').val();
+    videosDb.saveVideoNotes(id, notes);
 }
 
 function saveTags(id) {

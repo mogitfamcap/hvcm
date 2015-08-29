@@ -42,6 +42,7 @@ def create_db
     CREATE TABLE IF NOT EXISTS videos (
       id INTEGER PRIMARY KEY,
       path varchar(200),
+      notes TEXT,
       created_at INTEGER,
       added_at INTEGER,
       last_opened_at INTEGER
