@@ -56,6 +56,27 @@ module.exports = {
         });
     },
 
+    getVideoIdsByStatement: function(statement, callback) {
+        var db = new sqlite3.Database('hvcm.sqlite');
+        var result = [];
+        db.serialize(function() {
+            db.each(
+              statement,
+              function(err, row) {
+                  if (err) {
+                      console.log('Error: ' + err);
+                  } else {
+                      result.push(row.id);
+                  }
+              },
+              function() {
+                  callback(result);
+              }
+            );
+        });
+        db.close();
+    },
+
     getVideo: function(id, callback) {
         var db = new sqlite3.Database('hvcm.sqlite');
         db.serialize(function() {

@@ -7,9 +7,25 @@ window.onload = function() {
 
 function search() {
     var searchConditions = $('#search-input').tagsinput('items');
-    videosDb.getAllVideoIds(function(videoIds) {
-        drawVideos(videoIds);
-    });
+    if (searchConditions.length === 0) {
+        videosDb.getAllVideoIds(function(videoIds) {
+            drawVideos(videoIds);
+        });
+    } else {
+        var statement = "";
+        var first = true;
+        searchConditions.forEach(function(condition) {
+            if (!first) {
+                statement += " INTERSECT ";
+            }
+            first = false;
+            statement += "SELECT videos.id AS id FROM videos JOIN (SELECT * FROM tags UNION SELECT * FROM cast) AS attributes ON videos.id = attributes.video_id WHERE attributes.name='" + condition + "'";
+        });
+        console.log(statement);
+        videosDb.getVideoIdsByStatement(statement, function(videoIds) {
+            drawVideos(videoIds);
+        });
+    }
 }
 
 function drawVideos(ids) {
