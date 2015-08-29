@@ -18,7 +18,7 @@ function drawVideos() {
             result += "<tr>"
             result += "<td>" + play + "</td>";
             result += "<td>" + details + "</td>";
-            result += "<td>" + '' + "</td>"; // Tags
+            result += "<td>" + '<div><input type="text" id="video-list-tags-' + v.id + '" value="" data-role="tagsinput"/></div>' + "</td>"; // Tags
             result += "<td>" + '' + "</td>"; // Cast
             result += "<td>" + formatTimestamp(v.last_opened_at) + "</td>";
             result += "<td>" + formatTimestamp(v.created_at) + "</td>";
@@ -27,6 +27,10 @@ function drawVideos() {
         });
         $('#videos-table-body').html(result);
         $("#videos-table").tablesorter();
+
+        videos.forEach(function(v) {
+            populateVideoTags(v.id, $('#video-list-tags-' + v.id));
+        });
     });
 }
 
@@ -75,6 +79,7 @@ function saveTags(id) {
 }
 
 function populateVideoTags(id, element) {
+    element.tagsinput();
     element.tagsinput('removeAll');
     videosDb.getVideoTags(id, function(tags) {
         tags.forEach(function(tag) {
