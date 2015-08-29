@@ -48,6 +48,14 @@ module.exports = {
         saveVideoAttributes(id, 'tags', newTags);
     },
 
+    getVideoCast: function(id, callback) {
+        getVideoAttributes(id, 'cast', callback);
+    },
+
+    saveVideoCast: function(id, newCast) {
+        saveVideoAttributes(id, 'cast', newCast);
+    },
+
     updateLastOpenedAt: function(id) {
         var db = new sqlite3.Database('hvcm.sqlite');
 

@@ -18,8 +18,8 @@ function drawVideos() {
             result += "<tr>"
             result += "<td>" + play + "</td>";
             result += "<td>" + details + "</td>";
-            result += "<td>" + '<div><input type="text" id="video-list-tags-' + v.id + '" value="" data-role="tagsinput"/></div>' + "</td>"; // Tags
-            result += "<td>" + '' + "</td>"; // Cast
+            result += "<td>" + '<div><input type="text" id="video-list-tags-' + v.id + '" value="" data-role="tagsinput"/></div>' + "</td>";
+            result += "<td>" + '<div><input type="text" id="video-list-cast-' + v.id + '" value="" data-role="tagsinput"/></div>' + "</td>";
             result += "<td>" + formatTimestamp(v.last_opened_at) + "</td>";
             result += "<td>" + formatTimestamp(v.created_at) + "</td>";
             result += "<td>" + formatTimestamp(v.added_at) + "</td>";
@@ -30,6 +30,7 @@ function drawVideos() {
 
         videos.forEach(function(v) {
             populateVideoTags(v.id, $('#video-list-tags-' + v.id));
+            populateVideoCast(v.id, $('#video-list-cast-' + v.id));
         });
     });
 }
@@ -48,7 +49,6 @@ function playVideo(id) {
 function videoDetails(id) {
     videosDb.getVideo(id, function(v) {
         $('#video-name').html(video.name(v.path));
-        $('#video-cast').html('');
         $('#video-last-opened-at').html(formatTimestamp(v.last_opened_at));
         $('#video-created-at').html(formatTimestamp(v.created_at));
         $('#video-added-at').html(formatTimestamp(v.added_at));
@@ -64,6 +64,8 @@ function videoDetails(id) {
         });
 
         populateVideoTags(id, $('#video-tags-input'));
+        populateVideoCast(id, $('#video-cast-input'));
+
         $('#table-view').hide();
         $('#video-view').show();
     });
@@ -71,11 +73,17 @@ function videoDetails(id) {
 
 function saveVideo(id) {
     saveTags(id);
+    saveCast(id);
 }
 
 function saveTags(id) {
     var tags = $('#video-tags-input').tagsinput('items');
     videosDb.saveVideoTags(id, tags);
+}
+
+function saveCast(id) {
+    var cast = $('#video-cast-input').tagsinput('items');
+    videosDb.saveVideoCast(id, cast);
 }
 
 function populateVideoTags(id, element) {
@@ -84,6 +92,16 @@ function populateVideoTags(id, element) {
     videosDb.getVideoTags(id, function(tags) {
         tags.forEach(function(tag) {
             element.tagsinput('add', tag.name);
+        });
+    });
+}
+
+function populateVideoCast(id, element) {
+    element.tagsinput();
+    element.tagsinput('removeAll');
+    videosDb.getVideoCast(id, function(cast) {
+        cast.forEach(function(castMember) {
+            element.tagsinput('add', castMember.name);
         });
     });
 }
