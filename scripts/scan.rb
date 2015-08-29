@@ -35,7 +35,7 @@ def create_db
   puts 'Creating DB'
   db = SQLite3::Database.new 'hvcm.sqlite'
   db.execute <<-SQL
-    create table videos (
+    CREATE TABLE IF NOT EXISTS videos (
       id INTEGER PRIMARY KEY,
       path varchar(200),
       created_at INTEGER,
