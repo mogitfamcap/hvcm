@@ -51,9 +51,15 @@ function drawVideos(ids) {
         $('#videos-table-body').html(result);
         $("#videos-table").tablesorter();
 
-        videos.forEach(function(v) {
-            populateVideoTags(v.id, $('#video-list-tags-' + v.id));
-            populateVideoCast(v.id, $('#video-list-cast-' + v.id));
+        videosDb.getAllTags(function(allTags) {
+            videos.forEach(function(v) {
+                populateVideoTags(v.id, $('#video-list-tags-' + v.id), allTags);
+            });
+        });
+        videosDb.getAllCast(function(allCast) {
+            videos.forEach(function(v) {
+                populateVideoCast(v.id, $('#video-list-cast-' + v.id), allCast);
+            });
         });
     });
 }
@@ -116,24 +122,40 @@ function saveCast(id) {
     videosDb.saveVideoCast(id, cast);
 }
 
-function populateVideoTags(id, element) {
+function populateVideoTags(id, element, allTags) {
     element.tagsinput();
     element.tagsinput('removeAll');
-    videosDb.getVideoTags(id, function(tags) {
-        tags.forEach(function(tag) {
-            element.tagsinput('add', tag.name);
+    if (typeof allTags === 'undefined') {
+        videosDb.getVideoTags(id, function(tags) {
+            tags.forEach(function(tag) {
+                element.tagsinput('add', tag.name);
+            });
         });
-    });
+    } else {
+        allTags.forEach(function(tag) {
+            if (tag.video_id === id) {
+                element.tagsinput('add', tag.name);
+            }
+        });
+    }
 }
 
-function populateVideoCast(id, element) {
+function populateVideoCast(id, element, allCast) {
     element.tagsinput();
     element.tagsinput('removeAll');
-    videosDb.getVideoCast(id, function(cast) {
-        cast.forEach(function(castMember) {
-            element.tagsinput('add', castMember.name);
+    if (typeof allCast === 'undefined') {
+        videosDb.getVideoCast(id, function(cast) {
+            cast.forEach(function(castMember) {
+                element.tagsinput('add', castMember.name);
+            });
         });
-    });
+    } else {
+        allCast.forEach(function(castMember) {
+            if (castMember.video_id === id) {
+                element.tagsinput('add', castMember.name);
+            }
+        });
+    }
 }
 
 function formatTimestamp(timestamp) {

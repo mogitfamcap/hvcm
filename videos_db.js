@@ -106,6 +106,14 @@ module.exports = {
         getVideoAttributes(id, 'cast', callback);
     },
 
+    getAllTags: function(callback) {
+        getAllAttributes('tags', callback);
+    },
+
+    getAllCast: function(callback) {
+        getAllAttributes('cast', callback);
+    },
+
     saveVideoCast: function(id, newCast) {
         saveVideoAttributes(id, 'cast', newCast);
     },
@@ -138,6 +146,26 @@ function getVideoAttributes(videoId, attributeTableName, callback) {
                   console.log('Error: ' + err);
               } else {
                   result.push({id: row.id, name: row.name});
+              }
+          },
+          function() {
+              callback(result);
+          }
+        );
+    });
+}
+
+function getAllAttributes(attributeTableName, callback) {
+    var db = new sqlite3.Database('hvcm.sqlite');
+    var result = [];
+    db.serialize(function() {
+        db.each(
+          "SELECT name, video_id FROM " + attributeTableName,
+          function(err, row) {
+              if (err) {
+                  console.log('Error: ' + err);
+              } else {
+                  result.push(row);
               }
           },
           function() {
