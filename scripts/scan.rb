@@ -11,6 +11,12 @@ end
 
 def add_file(path, db)
   puts "Processing file: #{path}"
+
+  if File.symlink?(path)
+    puts "Skipping: symlink - #{path}"
+    return
+  end
+
   extname = File.extname(path)
   unless SUPPORTED_EXTNAMES.include?(extname)
     puts "Skipping: invalid extension: #{extname}"
@@ -29,7 +35,7 @@ def add_file(path, db)
 end
 
 def scan(directory, db)
-puts "Scaning directory #{directory}"
+  puts "Scaning directory #{directory}"
   Dir.glob("#{directory}/**/*".sub('//', '/')).each do |file_path|
     add_file(file_path, db)
   end
