@@ -123,7 +123,10 @@ function saveVideo(id) {
 }
 
 function saveNotes(id) {
+    videosDb.saveVideoNotes(id, $('#video-notes-textarea').val());
+}
 
+function saveTags(id) {
     var tags = $('#video-tags-input').tagsinput('items');
     videosDb.saveVideoTags(id, tags);
 }
