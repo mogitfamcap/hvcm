@@ -116,11 +116,22 @@ function videoDetails(id) {
             saveVideo(id);
         });
 
+        $('#button-save-and-home').unbind('click');
+        $('#button-save-and-home').attr('onclick', '').click(function() {
+            saveAndHome(id);
+        });
+
         populateVideoTags(id, $('#video-tags-input'));
         populateVideoCast(id, $('#video-cast-input'));
 
         $('#table-view').hide();
         $('#video-view').show();
+    });
+}
+
+function saveAndHome(id) {
+    saveVideo(id, function() {
+        search();
     });
 }
 
@@ -130,7 +141,9 @@ function saveVideo(id, callback) {
         videosDb.saveVideoTags(id, tags, function() {
             var cast = $('#video-cast-input').tagsinput('items');
             videosDb.saveVideoCast(id, cast, function() {
-                console.log("Saved");
+                if (typeof callback !== 'undefined') {
+                    callback();
+                }
             });
         });
     });

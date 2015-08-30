@@ -124,9 +124,7 @@ module.exports = {
           db.run("UPDATE videos SET notes = '" + notes + "' WHERE id = " + id);
         });
         db.close(function() {
-            console.log("saveVideoNotes: close callback");
             if (typeof callback !== 'undefined') {
-                console.log("saveVideoNotes: calling call");
                 callback();
             }
         });
