@@ -17,6 +17,11 @@ def add_file(path, db)
     return
   end
 
+  if File.directory?(path)
+    puts "Skipping: directory - #{path}"
+    return
+  end
+
   extname = File.extname(path)
   unless SUPPORTED_EXTNAMES.include?(extname.downcase)
     puts "Skipping: invalid extension: #{extname}"
