@@ -98,8 +98,8 @@ module.exports = {
         getVideoAttributes(id, 'tags', callback);
     },
 
-    saveVideoTags: function(id, newTags) {
-        saveVideoAttributes(id, 'tags', newTags);
+    saveVideoTags: function(id, newTags, callback) {
+        saveVideoAttributes(id, 'tags', newTags, callback);
     },
 
     getVideoCast: function(id, callback) {
@@ -114,16 +114,22 @@ module.exports = {
         getAllAttributes('cast', callback);
     },
 
-    saveVideoCast: function(id, newCast) {
-        saveVideoAttributes(id, 'cast', newCast);
+    saveVideoCast: function(id, newCast, callback) {
+        saveVideoAttributes(id, 'cast', newCast, callback);
     },
 
-    saveVideoNotes: function(id, notes) {
+    saveVideoNotes: function(id, notes, callback) {
         var db = new sqlite3.Database('hvcm.sqlite');
         db.serialize(function() {
           db.run("UPDATE videos SET notes = '" + notes + "' WHERE id = " + id);
         });
-        db.close();
+        db.close(function() {
+            console.log("saveVideoNotes: close callback");
+            if (typeof callback !== 'undefined') {
+                console.log("saveVideoNotes: calling call");
+                callback();
+            }
+        });
     },
 
     updateLastOpenedAt: function(id) {
@@ -175,27 +181,34 @@ function getAllAttributes(attributeTableName, callback) {
     });
 }
 
-function saveVideoAttributes(videoId, attributeTableName, newAttributes) {
-    var db = new sqlite3.Database('hvcm.sqlite');
+function saveVideoAttributes(videoId, attributeTableName, newAttributes, callback) {
     getVideoAttributes(videoId, attributeTableName, function(oldAttributeRows) {
-        var oldAttributes = [];
-        oldAttributeRows.forEach(function(row) {
-            oldAttributes.push(row.name);
-        });
-        newAttributes.forEach(function(newAttribute) {
+        var db = new sqlite3.Database('hvcm.sqlite');
+        db.serialize(function() {
+            var oldAttributes = [];
+            oldAttributeRows.forEach(function(row) {
+                oldAttributes.push(row.name);
+            });
             var insertStatement = db.prepare("INSERT INTO " + attributeTableName + "(video_id, name, added_at) VALUES(?, ?, ?)");
-            if (oldAttributes.indexOf(newAttribute) === -1) {
-                db.serialize(function() {
+            newAttributes.forEach(function(newAttribute) {
+                if (oldAttributes.indexOf(newAttribute) === -1) {
                     insertStatement.run(videoId, newAttribute, Math.floor(Date.now() / 1000));
-                });
-            }
-        });
-        oldAttributes.forEach(function(oldAttribute) {
+                }
+            });
+            insertStatement.finalize();
             var deleteStatement = db.prepare("DELETE FROM " + attributeTableName + " WHERE video_id = ? AND name = ?");
-            if (newAttributes.indexOf(oldAttribute) === -1) {
-                db.serialize(function() {
-                    deleteStatement.run(videoId, oldAttribute);
-                });
+            oldAttributes.forEach(function(oldAttribute) {
+                if (newAttributes.indexOf(oldAttribute) === -1) {
+                    db.serialize(function() {
+                        deleteStatement.run(videoId, oldAttribute);
+                    });
+                }
+            });
+            deleteStatement.finalize();
+        });
+        db.close(function() {
+            if (typeof callback !== 'undefined') {
+                callback();
             }
         });
     });

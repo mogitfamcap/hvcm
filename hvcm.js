@@ -124,24 +124,16 @@ function videoDetails(id) {
     });
 }
 
-function saveVideo(id) {
-    saveNotes(id);
-    saveTags(id);
-    saveCast(id);
-}
-
-function saveNotes(id) {
-    videosDb.saveVideoNotes(id, $('#video-notes-textarea').val());
-}
-
-function saveTags(id) {
-    var tags = $('#video-tags-input').tagsinput('items');
-    videosDb.saveVideoTags(id, tags);
-}
-
-function saveCast(id) {
-    var cast = $('#video-cast-input').tagsinput('items');
-    videosDb.saveVideoCast(id, cast);
+function saveVideo(id, callback) {
+    videosDb.saveVideoNotes(id, $('#video-notes-textarea').val(), function() {
+        var tags = $('#video-tags-input').tagsinput('items');
+        videosDb.saveVideoTags(id, tags, function() {
+            var cast = $('#video-cast-input').tagsinput('items');
+            videosDb.saveVideoCast(id, cast, function() {
+                console.log("Saved");
+            });
+        });
+    });
 }
 
 function populateVideoTags(id, element, allTags) {
