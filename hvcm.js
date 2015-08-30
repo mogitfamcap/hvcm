@@ -1,9 +1,23 @@
 var video = require('./video.js');
 var videosDb = require('./videos_db.js');
 
+var playerCommand = "vlc";
+
 window.onload = function() {
+    loadConfig();
     search();
 };
+
+function loadConfig() {
+    try {
+        var config = require('./config.json');
+        if (typeof config['player_command'] !== 'undefined') {
+            playerCommand = config['player_command'];
+        }
+    } catch (err) {
+        console.log("Config not found.");
+    }
+}
 
 function search() {
     var searchConditions = $('#search-input').tagsinput('items');
@@ -67,7 +81,7 @@ function drawVideos(ids) {
 function playVideo(id) {
     videosDb.getVideo(id, function(v) {
         var exec = require('child_process').exec;
-        var cmd = 'vlc "' + v.path + '"';
+        var cmd = playerCommand + ' "' + v.path + '"';
         console.log("Command: " + cmd);
         exec(cmd, function(error, stdout, stderr) {
         });
@@ -108,11 +122,7 @@ function saveVideo(id) {
 }
 
 function saveNotes(id) {
-    var notes = $('#video-notes-textarea').val();
-    videosDb.saveVideoNotes(id, notes);
-}
 
-function saveTags(id) {
     var tags = $('#video-tags-input').tagsinput('items');
     videosDb.saveVideoTags(id, tags);
 }
