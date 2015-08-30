@@ -92,6 +92,7 @@ function playVideo(id) {
 function videoDetails(id) {
     videosDb.getVideo(id, function(v) {
         $('#video-name').html(video.name(v.path));
+        $('#video-path').html(v.path);
         $('#video-notes-textarea').val(v.notes);
         $('#video-last-opened-at').html(formatTimestamp(v.last_opened_at));
         $('#video-created-at').html(formatTimestamp(v.created_at));
