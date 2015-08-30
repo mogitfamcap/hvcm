@@ -21,6 +21,14 @@ function loadConfig() {
 
 function search() {
     var searchConditions = $('#search-input').tagsinput('items');
+    var noTags = $('#search-no-tags').is(':checked');
+    if (noTags) {
+        var statement = "SELECT videos.id FROM videos LEFT JOIN tags ON videos.id = tags.video_id WHERE tags.id IS NULL";
+        videosDb.getVideoIdsByStatement(statement, function(videoIds) {
+            drawVideos(videoIds);
+        });
+        return;
+    }
     if (searchConditions.length === 0) {
         videosDb.getAllVideoIds(function(videoIds) {
             drawVideos(videoIds);
