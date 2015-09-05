@@ -22,16 +22,17 @@ function loadConfig() {
 function search() {
     var searchConditions = $('#search-input').tagsinput('items');
     var noTags = $('#search-no-tags').is(':checked');
+    var shouldShuffle = $('#search-shuffle').is(':checked');
     if (noTags) {
         var statement = "SELECT videos.id FROM videos LEFT JOIN tags ON videos.id = tags.video_id WHERE tags.id IS NULL";
         videosDb.getVideoIdsByStatement(statement, function(videoIds) {
-            drawVideos(videoIds);
+            drawVideos(videoIds, shouldShuffle);
         });
         return;
     }
     if (searchConditions.length === 0) {
         videosDb.getAllVideoIds(function(videoIds) {
-            drawVideos(videoIds);
+            drawVideos(videoIds, shouldShuffle);
         });
     } else {
         var statement = "";
@@ -45,17 +46,20 @@ function search() {
         });
         console.log(statement);
         videosDb.getVideoIdsByStatement(statement, function(videoIds) {
-            drawVideos(videoIds);
+            drawVideos(videoIds, shouldShuffle);
         });
     }
 }
 
-function drawVideos(ids) {
+function drawVideos(ids, shouldShuffle) {
     $('#table-view').show();
     $('#video-view').hide();
 
     var result = "";
     videosDb.getByIds(ids, function(videos) {
+        if (shouldShuffle) {
+            shuffle(videos);
+        }
         videos.forEach(function(v) {
             var name = video.name(v.path);
             var play = '<a href="#" onclick="playVideo(' + v.id + ');">' + 'Play' + '</a>';
@@ -207,4 +211,10 @@ function formatTimestamp(timestamp) {
     var str = date.getFullYear() + "/" + month + "/" + day + " " +  hour + ":" + min + ":" + sec;
 
     return str;
+}
+
+// http://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array-in-javascript
+function shuffle(o){
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
 }
