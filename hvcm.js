@@ -105,6 +105,7 @@ function videoDetails(id) {
         $('#video-last-opened-at').html(formatTimestamp(v.last_opened_at));
         $('#video-created-at').html(formatTimestamp(v.created_at));
         $('#video-added-at').html(formatTimestamp(v.added_at));
+        $('#video-delete-command').html("rm -rf \"" + v.path + "\"");
 
         $('#button-play').unbind('click');
         $('#button-play').attr('onclick', '').click(function() {
