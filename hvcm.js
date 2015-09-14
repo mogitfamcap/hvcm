@@ -93,7 +93,7 @@ function drawVideos(ids, shouldShuffle) {
 function playVideo(id) {
     videosDb.getVideo(id, function(v) {
         var exec = require('child_process').exec;
-        var cmd = playerCommand + ' "' + v.path + '"';
+        var cmd = playerCommand + ' ' + escapeShell(v.path);
         console.log("Command: " + cmd);
         exec(cmd, function(error, stdout, stderr) {
         });
@@ -218,3 +218,8 @@ function shuffle(o){
     for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
 }
+
+// http://stackoverflow.com/questions/1779858/how-do-i-escape-a-string-for-a-shell-command-in-node
+function escapeShell(cmd) {
+    return cmd.replace(/(["\s'$`\\])/g,'\\$1');
+};
