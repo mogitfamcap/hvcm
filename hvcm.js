@@ -221,5 +221,5 @@ function shuffle(o){
 
 // http://stackoverflow.com/questions/1779858/how-do-i-escape-a-string-for-a-shell-command-in-node
 function escapeShell(cmd) {
-    return cmd.replace(/(["\s'$`\\])/g,'\\$1');
+    return cmd.replace(/(["\s'$`\\\(\)])/g,'\\$1');
 };
