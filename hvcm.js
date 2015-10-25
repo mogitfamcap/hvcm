@@ -5,6 +5,7 @@ var playerCommand = "vlc";
 
 window.onload = function() {
     loadConfig();
+    $("#videos-table").tablesorter();
     search();
 };
 
@@ -76,7 +77,8 @@ function drawVideos(ids, shouldShuffle) {
             result += "</tr>"
         });
         $('#videos-table-body').html(result);
-        $("#videos-table").tablesorter();
+        $("#videos-table").trigger("update");
+
 
         videosDb.getAllTags(function(allTags) {
             videos.forEach(function(v) {
