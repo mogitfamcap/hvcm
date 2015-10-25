@@ -69,6 +69,7 @@ function drawVideos(ids, shouldShuffle) {
             result += "<td>" + details + "</td>";
             result += "<td>" + '<div><input type="text" id="video-list-tags-' + v.id + '" value="" data-role="tagsinput"/></div>' + "</td>";
             result += "<td>" + '<div><input type="text" id="video-list-cast-' + v.id + '" value="" data-role="tagsinput"/></div>' + "</td>";
+            result += "<td>" + v.times_opened + "</td>";
             result += "<td>" + formatTimestamp(v.last_opened_at) + "</td>";
             result += "<td>" + formatTimestamp(v.created_at) + "</td>";
             result += "<td>" + formatTimestamp(v.added_at) + "</td>";
@@ -106,6 +107,7 @@ function videoDetails(id) {
         $('#video-name').html(video.name(v.path));
         $('#video-path').html(v.path);
         $('#video-notes-textarea').val(v.notes);
+        $('#video-times-opened').html(v.times_opened);
         $('#video-last-opened-at').html(formatTimestamp(v.last_opened_at));
         $('#video-created-at').html(formatTimestamp(v.created_at));
         $('#video-added-at').html(formatTimestamp(v.added_at));

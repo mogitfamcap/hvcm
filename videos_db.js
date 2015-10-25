@@ -7,7 +7,7 @@ module.exports = {
 
         db.serialize(function() {
             db.each(
-              "SELECT id, path, created_at, added_at, last_opened_at FROM videos",
+              "SELECT id, path, times_opened, created_at, added_at, last_opened_at FROM videos",
               function(err, row) {
                   if (err) {
                       console.log('Error: ' + err);
@@ -28,7 +28,7 @@ module.exports = {
         var result = [];
 
         db.serialize(function() {
-            var statement = "SELECT id, path, created_at, added_at, last_opened_at FROM videos WHERE id IN (" + ids + ")";
+            var statement = "SELECT id, path, times_opened, created_at, added_at, last_opened_at FROM videos WHERE id IN (" + ids + ")";
             db.each(
               statement,
               function(err, row) {
@@ -81,7 +81,7 @@ module.exports = {
         var db = new sqlite3.Database('hvcm.sqlite');
         db.serialize(function() {
             db.each(
-              "SELECT id, path, notes, created_at, added_at, last_opened_at FROM videos WHERE id = " + id,
+              "SELECT id, path, notes, times_opened, created_at, added_at, last_opened_at FROM videos WHERE id = " + id,
               function(err, row) {
                   if (err) {
                       console.log('Error: ' + err);
