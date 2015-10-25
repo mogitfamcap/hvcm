@@ -2,4 +2,5 @@ build/
 *.sqlite
 node_modules/
 *.log
+*.swp
 config.json
