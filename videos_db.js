@@ -130,11 +130,11 @@ module.exports = {
         });
     },
 
-    updateLastOpenedAt: function(id) {
+    logOpened: function(id) {
         var db = new sqlite3.Database('hvcm.sqlite');
 
         db.serialize(function() {
-          db.run("UPDATE videos SET last_opened_at = " + Math.floor(Date.now() / 1000) + " WHERE id = " + id);
+          db.run("UPDATE videos SET last_opened_at = " + Math.floor(Date.now() / 1000) + ", times_opened = times_opened + 1 WHERE id = " + id);
         });
     }
 };

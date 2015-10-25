@@ -97,7 +97,7 @@ function playVideo(id) {
         console.log("Command: " + cmd);
         exec(cmd, function(error, stdout, stderr) {
         });
-        videosDb.updateLastOpenedAt(id);
+        videosDb.logOpened(id);
     });
 }
 
