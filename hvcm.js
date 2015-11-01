@@ -70,6 +70,7 @@ function drawVideos(ids, shouldShuffle) {
             result += "<td>" + details + "</td>";
             result += "<td>" + '<div><input type="text" id="video-list-tags-' + v.id + '" value="" data-role="tagsinput"/></div>' + "</td>";
             result += "<td>" + '<div><input type="text" id="video-list-cast-' + v.id + '" value="" data-role="tagsinput"/></div>' + "</td>";
+            result += "<td>" + v.rating + "<div id='video-rating-" + v.id + "'/>" + "</td>";
             result += "<td>" + v.times_opened + "</td>";
             result += "<td>" + formatTimestamp(v.last_opened_at) + "</td>";
             result += "<td>" + formatTimestamp(v.created_at) + "</td>";
@@ -79,7 +80,6 @@ function drawVideos(ids, shouldShuffle) {
         $('#videos-table-body').html(result);
         $("#videos-table").trigger("update");
 
-
         videosDb.getAllTags(function(allTags) {
             videos.forEach(function(v) {
                 populateVideoTags(v.id, $('#video-list-tags-' + v.id), allTags);
@@ -88,6 +88,12 @@ function drawVideos(ids, shouldShuffle) {
         videosDb.getAllCast(function(allCast) {
             videos.forEach(function(v) {
                 populateVideoCast(v.id, $('#video-list-cast-' + v.id), allCast);
+            });
+        });
+        videos.forEach(function(v) {
+            $('#video-rating-' + v.id).raty({
+                score: v.rating,
+                path: 'vendor/images'
             });
         });
     });
@@ -133,6 +139,11 @@ function videoDetails(id) {
         populateVideoTags(id, $('#video-tags-input'));
         populateVideoCast(id, $('#video-cast-input'));
 
+        $('#video-rating-div').raty({
+            score: v.rating,
+            path: 'vendor/images'
+        });
+
         $('#table-view').hide();
         $('#video-view').show();
     });
@@ -150,9 +161,12 @@ function saveVideo(id, callback) {
         videosDb.saveVideoTags(id, tags, function() {
             var cast = $('#video-cast-input').tagsinput('items');
             videosDb.saveVideoCast(id, cast, function() {
-                if (typeof callback !== 'undefined') {
-                    callback();
-                }
+                var rating = $('#video-rating-div').raty('score');
+                videosDb.saveVideoRating(id, rating, function() {
+                    if (typeof callback !== 'undefined') {
+                        callback();
+                    }
+                });
             });
         });
     });

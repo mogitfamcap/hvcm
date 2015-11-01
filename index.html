@@ -12,10 +12,12 @@
     <script src="./vendor/jquery.tablesorter.min.js"></script>
     <script src="./vendor/bootstrap.min.js"></script>
     <script src="./vendor/bootstrap-tagsinput.min.js"></script>
+    <script src="./vendor/jquery.raty.js"></script>
 
     <link rel="stylesheet" type="text/css" href="./vendor/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="./vendor/bootstrap-theme.min.css"/>
     <link rel="stylesheet" type="text/css" href="./vendor/bootstrap-tagsinput.css"/>
+    <link rel="stylesheet" type="text/css" href="./vendor/jquery.raty.css"/>
     <link rel="stylesheet" type="text/css" href="./hvcm.css"/>
   </head>
   <body>
@@ -38,6 +40,7 @@
                 <th>Name</th>
                 <th>Tags</th>
                 <th>Cast</th>
+                <th>Rating</th>
                 <th>Times Opened</th>
                 <th>Last Opened</th>
                 <th>Created</th>
@@ -69,6 +72,11 @@
                 <textarea rows="4" cols="50" id="video-notes-textarea"></textarea>
             </dd>
             <dt>Times Opened</dt><dd id="video-times-opened"></dd>
+            <dt>Rating</dt>
+            <dd id="video-rating-dd">
+                <div id="video-rating-div" video-id="">
+                </div>
+            </dd>
             <dt>Last Opened at</dt><dd id="video-last-opened-at"></dd>
             <dt>Created at</dt><dd id="video-created-at"></dd>
             <dt>Added at</dt><dd id="video-added-at"></dd>

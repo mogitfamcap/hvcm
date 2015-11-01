@@ -28,7 +28,7 @@ module.exports = {
         var result = [];
 
         db.serialize(function() {
-            var statement = "SELECT id, path, times_opened, created_at, added_at, last_opened_at FROM videos WHERE id IN (" + ids + ")";
+            var statement = "SELECT id, path, rating, times_opened, created_at, added_at, last_opened_at FROM videos WHERE id IN (" + ids + ")";
             db.each(
               statement,
               function(err, row) {
@@ -81,7 +81,7 @@ module.exports = {
         var db = new sqlite3.Database('hvcm.sqlite');
         db.serialize(function() {
             db.each(
-              "SELECT id, path, notes, times_opened, created_at, added_at, last_opened_at FROM videos WHERE id = " + id,
+              "SELECT id, path, notes, rating, times_opened, created_at, added_at, last_opened_at FROM videos WHERE id = " + id,
               function(err, row) {
                   if (err) {
                       console.log('Error: ' + err);
@@ -122,6 +122,18 @@ module.exports = {
         var db = new sqlite3.Database('hvcm.sqlite');
         db.serialize(function() {
           db.run("UPDATE videos SET notes = '" + notes + "' WHERE id = " + id);
+        });
+        db.close(function() {
+            if (typeof callback !== 'undefined') {
+                callback();
+            }
+        });
+    },
+
+    saveVideoRating: function(id, rating, callback) {
+        var db = new sqlite3.Database('hvcm.sqlite');
+        db.serialize(function() {
+          db.run("UPDATE videos SET rating = " + rating + " WHERE id = " + id);
         });
         db.close(function() {
             if (typeof callback !== 'undefined') {
