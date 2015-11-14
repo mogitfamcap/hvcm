@@ -30,6 +30,29 @@
             <input type="checkbox" id="search-shuffle"></input>
             <label for="search-shuffle">Shuffle</label>
             <br>
+            <div>
+              <p>
+                Rating between
+                <select id="search-rating-min">
+                  <option value="0" selected>0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+                and
+                <select id="search-rating-max">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5" selected>5</option>
+                </select>
+              </p>
+            </div>
+            <br>
             <input type="button" id="button-search" value="Search" onclick="search()"></input>
         </span>
 

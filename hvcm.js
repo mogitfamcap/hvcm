@@ -24,6 +24,8 @@ function search() {
     var searchConditions = $('#search-input').tagsinput('items');
     var noTags = $('#search-no-tags').is(':checked');
     var shouldShuffle = $('#search-shuffle').is(':checked');
+    var minRating = $('#search-rating-min').val();
+    var maxRating = $('#search-rating-max').val();
     if (noTags) {
         var statement = "SELECT videos.id FROM videos LEFT JOIN tags ON videos.id = tags.video_id WHERE tags.id IS NULL";
         videosDb.getVideoIdsByStatement(statement, function(videoIds) {
@@ -31,25 +33,16 @@ function search() {
         });
         return;
     }
-    if (searchConditions.length === 0) {
-        videosDb.getAllVideoIds(function(videoIds) {
-            drawVideos(videoIds, shouldShuffle);
-        });
-    } else {
-        var statement = "";
-        var first = true;
-        searchConditions.forEach(function(condition) {
-            if (!first) {
-                statement += " INTERSECT ";
-            }
-            first = false;
-            statement += "SELECT videos.id AS id FROM videos JOIN (SELECT * FROM tags UNION SELECT * FROM cast) AS attributes ON videos.id = attributes.video_id WHERE attributes.name='" + condition + "'";
-        });
-        console.log(statement);
-        videosDb.getVideoIdsByStatement(statement, function(videoIds) {
-            drawVideos(videoIds, shouldShuffle);
-        });
-    }
+    var statement = "";
+    statement += 'SELECT videos.id AS id FROM videos WHERE rating >= ' + minRating + ' and rating <= ' + maxRating;
+    searchConditions.forEach(function(condition) {
+        statement += " INTERSECT ";
+        statement += "SELECT videos.id AS id FROM videos JOIN (SELECT * FROM tags UNION SELECT * FROM cast) AS attributes ON videos.id = attributes.video_id WHERE attributes.name='" + condition + "'";
+    });
+    console.log(statement);
+    videosDb.getVideoIdsByStatement(statement, function(videoIds) {
+        drawVideos(videoIds, shouldShuffle);
+    });
 }
 
 function drawVideos(ids, shouldShuffle) {
