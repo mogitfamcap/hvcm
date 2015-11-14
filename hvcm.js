@@ -12,8 +12,8 @@ window.onload = function() {
 function loadConfig() {
     try {
         var config = require('./config.json');
-        if (typeof config['player_command'] !== 'undefined') {
-            playerCommand = config['player_command'];
+        if (typeof config.player_command !== 'undefined') {
+            playerCommand = config.player_command;
         }
     } catch (err) {
         console.log("Config not found.");
@@ -26,15 +26,15 @@ function search() {
     var shouldShuffle = $('#search-shuffle').is(':checked');
     var minRating = $('#search-rating-min').val();
     var maxRating = $('#search-rating-max').val();
+    var statement;
     if (noTags) {
-        var statement = "SELECT videos.id FROM videos LEFT JOIN tags ON videos.id = tags.video_id WHERE tags.id IS NULL";
+        statement = "SELECT videos.id FROM videos LEFT JOIN tags ON videos.id = tags.video_id WHERE tags.id IS NULL";
         videosDb.getVideoIdsByStatement(statement, function(videoIds) {
             drawVideos(videoIds, shouldShuffle);
         });
         return;
     }
-    var statement = "";
-    statement += 'SELECT videos.id AS id FROM videos WHERE rating >= ' + minRating + ' and rating <= ' + maxRating;
+    statement = 'SELECT videos.id AS id FROM videos WHERE rating >= ' + minRating + ' and rating <= ' + maxRating;
     searchConditions.forEach(function(condition) {
         statement += " INTERSECT ";
         statement += "SELECT videos.id AS id FROM videos JOIN (SELECT * FROM tags UNION SELECT * FROM cast) AS attributes ON videos.id = attributes.video_id WHERE attributes.name='" + condition + "'";
@@ -58,7 +58,7 @@ function drawVideos(ids, shouldShuffle) {
             var name = video.name(v.path);
             var play = '<a href="#" onclick="playVideo(' + v.id + ');">' + 'Play' + '</a>';
             var details = '<a href="#" onclick="videoDetails(' + v.id + ');">' + name + '</a>';
-            result += "<tr>"
+            result += "<tr>";
             result += "<td>" + play + "</td>";
             result += "<td>" + details + "</td>";
             result += "<td>" + '<div><input type="text" id="video-list-tags-' + v.id + '" value="" data-role="tagsinput"/></div>' + "</td>";
@@ -68,7 +68,7 @@ function drawVideos(ids, shouldShuffle) {
             result += "<td>" + formatTimestamp(v.last_opened_at) + "</td>";
             result += "<td>" + formatTimestamp(v.created_at) + "</td>";
             result += "<td>" + formatTimestamp(v.added_at) + "</td>";
-            result += "</tr>"
+            result += "</tr>";
         });
         $('#videos-table-body').html(result);
         $("#videos-table").trigger("update");
@@ -233,4 +233,4 @@ function shuffle(o){
 // http://stackoverflow.com/questions/1779858/how-do-i-escape-a-string-for-a-shell-command-in-node
 function escapeShell(cmd) {
     return cmd.replace(/(["\s&'$`\\\(\)])/g,'\\$1');
-};
+}
