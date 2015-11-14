@@ -33,6 +33,10 @@ dd {
 #search-input {
 }
 
+#search-video-count {
+    font-weight: bold;
+}
+
 .bootstrap-tagsinput {
   width: 100% !important;
 }

@@ -48,7 +48,7 @@ function search() {
 function drawVideos(ids, shouldShuffle) {
     $('#table-view').show();
     $('#video-view').hide();
-
+    $('#search-video-count').html(ids.length);
     var result = "";
     videosDb.getByIds(ids, function(videos) {
         if (shouldShuffle) {
