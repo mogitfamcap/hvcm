@@ -56,6 +56,7 @@ def create_db
       notes TEXT,
       times_opened INTEGER DEFAULT 0,
       rating INTEGER DEFAULT 0,
+      ccount INTEGER DEFAULT 0,
       created_at INTEGER,
       added_at INTEGER,
       last_opened_at INTEGER
