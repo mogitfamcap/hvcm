@@ -7,7 +7,7 @@ module.exports = {
 
         db.serialize(function() {
             db.each(
-              "SELECT id, path, times_opened, created_at, added_at, last_opened_at FROM videos",
+              "SELECT id, path, ccount, times_opened, created_at, added_at, last_opened_at FROM videos",
               function(err, row) {
                   if (err) {
                       console.log('Error: ' + err);
@@ -28,7 +28,7 @@ module.exports = {
         var result = [];
 
         db.serialize(function() {
-            var statement = "SELECT id, path, rating, times_opened, created_at, added_at, last_opened_at FROM videos WHERE id IN (" + ids + ")";
+            var statement = "SELECT id, path, rating, ccount, times_opened, created_at, added_at, last_opened_at FROM videos WHERE id IN (" + ids + ")";
             db.each(
               statement,
               function(err, row) {
@@ -81,7 +81,7 @@ module.exports = {
         var db = new sqlite3.Database('hvcm.sqlite');
         db.serialize(function() {
             db.each(
-              "SELECT id, path, notes, rating, times_opened, created_at, added_at, last_opened_at FROM videos WHERE id = " + id,
+              "SELECT id, path, notes, rating, ccount, times_opened, created_at, added_at, last_opened_at FROM videos WHERE id = " + id,
               function(err, row) {
                   if (err) {
                       console.log('Error: ' + err);
@@ -147,6 +147,20 @@ module.exports = {
 
         db.serialize(function() {
           db.run("UPDATE videos SET last_opened_at = " + Math.floor(Date.now() / 1000) + ", times_opened = times_opened + 1 WHERE id = " + id);
+        });
+    },
+
+    incrementCcount: function(id, callback) {
+        var db = new sqlite3.Database('hvcm.sqlite');
+
+        db.serialize(function() {
+          db.run("UPDATE videos SET ccount = ccount + 1 WHERE id = " + id);
+        });
+
+        db.close(function() {
+            if (typeof callback !== 'undefined') {
+                callback();
+            }
         });
     }
 };

@@ -65,6 +65,7 @@ function drawVideos(ids, shouldShuffle) {
             result += "<td>" + '<div><input type="text" id="video-list-cast-' + v.id + '" value="" data-role="tagsinput"/></div>' + "</td>";
             result += "<td>" + v.rating + "<div id='video-rating-" + v.id + "'/>" + "</td>";
             result += "<td>" + v.times_opened + "</td>";
+            result += "<td>" + v.ccount + "</td>";
             result += "<td>" + formatTimestamp(v.last_opened_at) + "</td>";
             result += "<td>" + formatTimestamp(v.created_at) + "</td>";
             result += "<td>" + formatTimestamp(v.added_at) + "</td>";
@@ -114,6 +115,12 @@ function videoDetails(id) {
         $('#video-added-at').html(formatTimestamp(v.added_at));
         $('#video-delete-command').html("rm -rf \"" + v.path + "\"");
 
+        $('#video-ccount').html(v.ccount);
+        $('#video-increment-ccount').unbind('click');
+        $('#video-increment-ccount').attr('onclick', '').click(function() {
+            incrementCcount(id, v.ccount);
+        });
+
         $('#button-play').unbind('click');
         $('#button-play').attr('onclick', '').click(function() {
             playVideo(id);
@@ -139,6 +146,12 @@ function videoDetails(id) {
 
         $('#table-view').hide();
         $('#video-view').show();
+    });
+}
+
+function incrementCcount(id, ccount) {
+    videosDb.incrementCcount(id, function() {
+      $('#video-ccount').html(ccount + 1);
     });
 }
 
